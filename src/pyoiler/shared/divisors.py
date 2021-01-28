@@ -5,7 +5,7 @@ import operator as op
 
 def get_factors(n:int, primes:Iterable[int]):
     for p in primes:
-        if p * p > n:
+        if p * p > n//2:
             break
         count = 0
         while not n % p:
@@ -17,6 +17,10 @@ def get_factors(n:int, primes:Iterable[int]):
         yield n, 1
 
 def divisors(n,primes:Iterable[int]):
+    if n==1:
+        yield 1
+        return
+
     fs = list(get_factors(n,primes))
     nfactors = len(fs)
     f = [0] * nfactors

@@ -1,7 +1,39 @@
 from ..shared.solver import Solver
+from functools import lru_cache
+
+
+def get_divisors(n:int):
+    if n==1:
+        yield 1
+        return
+
+    for i in range(n//2,0,-1):
+        if not n%i:
+            yield i
+            i=i//2+1
+
+    yield n
+
+
+
+
+@lru_cache
+def get_triangle_number(index:int):
+    if index<0:
+        raise ValueError("Only >= 0")
+    if index == 0:
+        return 1
+    return index + 1 + get_triangle_number(index-1)
+
 
 
 def _solve(print=print):
+
+    for i in range(10_000):
+        t = get_triangle_number(i)
+        ds = list(get_divisors(t))
+        if len(ds)>250:
+            print(f'{t:>4}: {len(sorted(ds))}')
     print('Not done')
     return False
 
