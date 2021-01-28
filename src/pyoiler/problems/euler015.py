@@ -2,21 +2,21 @@ from typing import Iterable, Tuple
 from ..shared.more_itertools import flat_map, count
 from ..shared.solver import Solver
 
-    """[summary]
-        2 thoughts on performance:
-          1. This *enumerates* paths, which isn't necessary.
-             All we need to do is count them, so just increment
-             a number when you get to 16,16, and forget about
-             holding on to the tail.
-          2. Adding threads should be trivial, especially
-             after changing the search to depth-first.
+"""[summary]
+2 thoughts on performance:
+    1. This *enumerates* paths, which isn't necessary.
+        All we need to do is count them, so just increment
+        a number when you get to 16,16, and forget about
+        holding on to the tail.
+    2. Adding threads should be trivial, especially
+        after changing the search to depth-first.
 
-    Returns:
-        [type]: [description]
+Returns:
+[type]: [description]
 
-    Yields:
-        [type]: [description]
-    """
+Yields:
+[type]: [description]
+"""
 
 Position = Tuple[int,int]
 
