@@ -1,5 +1,5 @@
-from cache import memoize
-from more_itertools import nth
+from .cache import memoize
+from .more_itertools import nth
 
 
 @memoize

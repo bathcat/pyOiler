@@ -1,6 +1,6 @@
 from itertools import islice, count
 from typing import List, FrozenSet, Iterable
-from more_itertools import take_while
+from .more_itertools import take_while
 import random
 import numpy as np
 
