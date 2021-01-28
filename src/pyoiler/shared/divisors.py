@@ -1,6 +1,6 @@
 from functools import reduce
 from typing import Iterable
-from more_itertools import all_but_last
+from .more_itertools import all_but_last
 import operator as op
 
 def get_factors(n:int, primes:Iterable[int]):
