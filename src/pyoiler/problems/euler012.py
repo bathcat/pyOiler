@@ -1,19 +1,11 @@
 from ..shared.solver import Solver
 from functools import lru_cache
+import sympy 
 
 
-def get_divisors(n:int):
-    if n==1:
-        yield 1
-        return
 
-    for i in range(n//2,0,-1):
-        if not n%i:
-            yield i
-            i=i//2+1
 
-    yield n
-
+get_divisors=sympy.divisors
 
 
 
@@ -29,11 +21,13 @@ def get_triangle_number(index:int):
 
 def _solve(print=print):
 
-    for i in range(10_000):
+    for i in range(100_000):
         t = get_triangle_number(i)
-        ds = list(get_divisors(t))
-        if len(ds)>250:
-            print(f'{t:>4}: {len(sorted(ds))}')
+        ds = get_divisors(t)
+        d_count= len(ds)
+        if d_count > 500:
+            print(f't:{t}: {d_count}')
+            return True
     print('Not done')
     return False
 
