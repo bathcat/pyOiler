@@ -17,7 +17,7 @@ def _solve(print = print):
     limit = 100_000
     dpss = [n for n in range(2,limit) if is_digit_power_sum(n,power)]
     print(f'Result: {sum(dpss)}')
-    return False
+    return True
 
 
 description = '''
