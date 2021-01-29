@@ -2,7 +2,7 @@ import time
 import cProfile
 
 
-from pyoiler.problems.euler021 import solver
+from pyoiler.problems.euler030 import solver
 
 
 class Colors:
