@@ -1,14 +1,19 @@
 from ..shared.solver import Solver
 from ..shared.primes import primes_below
 import math
-from sympy.utilities.iterables import variations
-
+import itertools
 
 """[summary]
 
 First naive implementation:
   Answer: 1139575 (Wrong, according to https://projecteuler.info/problem=87)
   Time: 415s
+  (I think the problem was that some numbers can be expressed as a 
+  triple in multiple ways, so some got counted twice.)
+
+MVP implementation:
+  Answer: 1097343 (Correct, says Euler)
+  Time: .41s
 
 """
 
@@ -28,21 +33,24 @@ prime square, prime cube, and prime fourth power?
 
 def _solve(print = print):
     limit = 50_000_000
-    ps = primes_below(math.isqrt(limit))
+    
+    primes = primes_below(math.isqrt(limit))
+    
+    squares = (p**2 for p in primes)
+    cubes = itertools.takewhile(lambda t: t<limit,(p**3 for p in primes))
+    h_cubes = itertools.takewhile(lambda t: t<limit,(p**4 for p in primes))
 
-    n_count = 0
-    for a,b,c in variations(ps,3,True):      
-        n_0 = a**2
-        n_1 = n_0+ b**3
-        if n_1>=limit:
-            continue
-        n = n_1 + c**4
-        if n < limit:
-            n_count+=1
+    terms = itertools.product(squares,cubes,h_cubes)
 
-    print(f'Result (n_count): {n_count}')
+    triples = set()
+    for s,c,h in terms:      
+        triple = s+c+h
+        if triple < limit:
+            triples.add(triple)
 
-    return False
+    print(f'Result (len): {len(triples)}')
+
+    return True
 
 
 
