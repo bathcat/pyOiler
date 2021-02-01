@@ -1,40 +1,49 @@
 from ..shared.solver import Solver
 import gmpy2
-from gmpy2 import mpz, powmod, xmpz
 
-"""[summary]
 
-Note:
-    https://en.wikipedia.org/wiki/Tetration
+
  
-Maybe: 
-    https://gmpy2.readthedocs.io/en/latest
-    https://github.com/aleaxit/gmpy
+def tetration_mod(a:int,height:int,digits:int)->int:
+    """Gets the rightmost digits of a tetration operation
+
+       Notes:
+       1. Wikipedia's entry on [Graham's number](https://en.wikipedia.org/wiki/Graham%27s_number)
+          describes an algorithm for getting the rightmost digits of a tetration operation:
+
+          > A simple algorithm for computing these digits may be described as follows: 
+          > let x = 3, then iterate, d times, the assignment x = 3**x mod 10d. Except for omitting 
+          > any leading 0s, the final value assigned to x (as a base-ten numeral) is then composed 
+          > of the d rightmost decimal digits of 3↑↑n, for all n > d. (If the final value of x 
+          > has fewer than d digits, then the required number of leading 0s must be added.)  
+
+       2. Native python is painfully slow; using [GMP](http://gmplib.org) for 
+          integer operations is way faster. 
+
+          See also https://gmpy2.readthedocs.io/en/latest/index.html
+
+    Args:
+        a (int): Argument
+        height (int): Height
+        digits (int): Number of rightmost digits to capture
+
+    Returns:
+        int: Rightmost digits
+    """
+    result = gmpy2.xmpz(a)
+    for i in range(1,min(height,digits+1)):
+        result = (a**result)%(10**digits) 
+    return result        
 
 
-"""
-
-def hyperpow(a:int,b:int)->int:
-    result = xmpz(a)
-    for i in range(1,b):
-        result = a**result 
-    return result
-
-# def hyperpow(a:int,b:int)->int:
-#     result = a
-#     for i in range(1,b):
-#         result = a**result 
-#     return result
 
 def _solve(print = print):
-    print(f'\n\n***************')
-    gmpy2.get_context().precision=1024 ** 6
-    
+    a=1777
+    height=1855
+    digits = 8
+    print(f'Answer: {tetration_mod(a,height,digits)}')
 
-    ##print(gmpy2.get_context())
-
-    print(f"3↑↑4 = {hyperpow(3,4)}")
-    return False
+    return True
 
 description = '''
 The hyperexponentiation or tetration of a number a by a positive integer 
