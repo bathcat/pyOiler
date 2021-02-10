@@ -6,6 +6,11 @@ import dataclasses
 from typing import Iterable
 from fractions import Fraction
 
+import multiprocessing as mp
+
+import rx
+from rx import operators as ops
+
 """[summary]
 
 An actual solution would look like this:
@@ -40,6 +45,7 @@ class Bag:
         return result
 
 
+
 @dataclasses.dataclass(frozen=True)
 class Game:
     picks:Iterable[Color]
@@ -62,15 +68,19 @@ def play(turns:int)->Game:
     
     return Game(picks)
 
+def play_w(turns:int)->bool:
+    bag = Bag()
+    picks = [bag.draw() for _ in range(turns) ]
+    blues = len([1 for p in picks if p==Color.Blue])
+    
+    return blues > (turns//2)
 
 
-
-
-def _solve(print=print):
+def _solve_naive(print=print):
     print(f'\n\n\n***************')
     
     turns=15
-    game_count=10_000_000
+    game_count=150_000_000
     wins=0
 
     for i in range(game_count):
@@ -83,6 +93,51 @@ def _solve(print=print):
     print(f"Not done")
     return False
 
+def _solve_rx(print=print):
+    """Benchmark: 15/1_000_000 takes 30s """
+    print(f'\n\n\n***************')
+    
+    turns=15
+    game_count=1_000_000
+
+    #scheduler=rx.scheduler.CurrentThreadScheduler()
+    scheduler=rx.scheduler.ThreadPoolScheduler(4)
+
+    wins = rx.range(0,game_count,scheduler=scheduler)\
+             .pipe(
+                 ops.filter(lambda i: play_w(turns)),
+                 ops.count()
+             ).run()
+
+
+    print(f'  Max prize: {math.floor(game_count/wins)}')
+
+    print(f"Not done")
+    return False
+
+turns=15
+
+def do_play(throwaway:int)->bool:
+    bag = Bag()
+    picks = [bag.draw() for _ in range(turns) ]
+    blues = len([1 for p in picks if p==Color.Blue])
+    return blues > (turns//2)
+
+
+def _solve(print=print):
+    """Benchmark: 15/1_000_000 takes 4s """
+    print(f'\n\n\n***************')
+    
+    game_count=250_000_000
+    wins = 0
+    with mp.Pool(12) as pool:
+        results = pool.map(do_play, range(game_count),5_000)
+        wins = len([r for r in results if r])
+
+    print(f'  Max prize: {math.floor(game_count/wins)}')
+
+    print(f"Not done")
+    return False
 
 
 description = '''
